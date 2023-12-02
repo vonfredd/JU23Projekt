@@ -24,6 +24,9 @@ public class Main {
         List<Country> countries = query.getResultList();
         countries.forEach(System.out::println);
 
+        //https://vladmihalcea.com/entitymanager-find-getreference-jpa/
+
+
         em.close();
     }
 

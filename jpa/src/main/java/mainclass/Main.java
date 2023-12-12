@@ -1,4 +1,8 @@
+package mainclass;
+
+import countrydummyclass.Country;
 import jakarta.persistence.*;
+import util.JPAUtil;
 
 import java.util.List;
 import java.util.Scanner;

@@ -16,7 +16,6 @@ CREATE TABLE Course(
 
     FOREIGN KEY (courseTeacherId) REFERENCES Teacher(teacherId),
     FOREIGN KEY (courseClassroomId) REFERENCES Classroom(classroomId)
-
 );
 CREATE TABLE Grade(
     gradeId INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,7 +23,7 @@ CREATE TABLE Grade(
     gradeStudentId INT,
     gradeCourseId INT NOT NULL,
 
-    FOREIGN KEY (gradeStudentId) REFERENCES Student(strudentId),
+    FOREIGN KEY (gradeStudentId) REFERENCES Student(studentId),
     FOREIGN KEY (gradeCourseId) REFERENCES Grade(gradeId)
 );
 CREATE TABLE Student(

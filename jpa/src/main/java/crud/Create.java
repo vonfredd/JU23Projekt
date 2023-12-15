@@ -9,6 +9,9 @@ import util.JPAUtil;
 
 import java.util.Optional;
 
+import static mainclass.Main.inTransaction;
+
+
 public class Create {
 
     /*
@@ -18,12 +21,13 @@ public class Create {
     static EntityManager em = JPAUtil.getEntityManager();
 
     public static void course() {
+        em.getTransaction().begin();
 
         System.out.println("Enter new Course name: ");
         String name = UserInputHandler.readStringInput();
 
         System.out.println("Which Teacher (ID) would you like to assign?: ");
-        Course course = new Course();
+        final Course course = new Course();
         Teacher teacher = null;
         while (teacher == null) {
             Read.showTeachers();
@@ -34,7 +38,11 @@ public class Create {
                 System.out.println("Teacher with teacherId " + teacherId + " not found.");
             }
         }
+
         course.setTeacher(teacher);
+        inTransaction(entityManager -> entityManager.persist(course));
+        em.close();
+
     }
 
     private static Teacher getTeacherById(int teacherId) {
@@ -42,7 +50,7 @@ public class Create {
         return teacher;
     }
 
-    private static void student() {
+    public static void student() {
         System.out.println("Enter new student first name: ");
         String firstName = UserInputHandler.readStringInput();
         System.out.println("Enter new student last name: ");

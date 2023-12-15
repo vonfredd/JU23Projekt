@@ -55,5 +55,13 @@ public class StudentCourseGrade {
         this.course = course;
     }
 
-
+    @Override
+    public String toString() {
+        return "StudentCourseGrade{" +
+                "id=" + id +
+                ", grade=" + grade +
+                ", student=" + student +
+                ", course=" + course +
+                '}';
+    }
 }

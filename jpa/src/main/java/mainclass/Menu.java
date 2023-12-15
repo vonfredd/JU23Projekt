@@ -1,6 +1,7 @@
 package mainclass;
 
 import classes.Course;
+import crud.Create;
 import crud.Read;
 
 import static crud.Read.studentsFromCourse;
@@ -17,11 +18,12 @@ public class Menu {
                     2. Student
                     0. Back
                     """;
+            System.out.println(createMenu);
             int menuChoice = UserInputHandler.menuInput(2);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
-                // case 1 -> Course
-                // case 2 -> Student
+                case 1 -> Create.course();
+                case 2 -> Create.student();
                 default -> System.out.println("Invalid choice.");
             }
         }
@@ -116,9 +118,4 @@ public class Menu {
                     """;
         System.out.println(mainMenu);
     }
-
-public void continueWithEnter() {
-        UserInputHandler.pressEnterToContinue();
-    }
-
 }

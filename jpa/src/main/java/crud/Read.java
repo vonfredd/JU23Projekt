@@ -18,6 +18,7 @@ public class Read {
     static EntityManager em = JPAUtil.getEntityManager();
 
     public static void studentsFromCourse() {
+        showCourse();
         System.out.println("What course do you want to show?");
         int courseId = UserInputHandler.readIntInput();
         TypedQuery<StudentCourseGrade> query = em.createQuery("" +
@@ -43,9 +44,9 @@ public class Read {
 
     public static void showTeachers () {
         TypedQuery<Teacher> query = em.createQuery("SELECT t FROM Teacher t", Teacher.class);
-        em.close();
         List<Teacher> teachers = query.getResultList();
         teachers.forEach(System.out::println);
+        em.close();
     }
 
     public static void showStudents () {
@@ -57,8 +58,8 @@ public class Read {
 
     public static void showCourse(){
         TypedQuery<Course> query = em.createQuery("SELECT s FROM Course s", Course.class);
-        em.close();
         List<Course> courses = query.getResultList();
         courses.forEach(System.out::println);
+        em.close();
     }
 }

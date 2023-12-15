@@ -41,4 +41,12 @@ public class Classroom {
         this.classroomCapacity = classroomCapacity;
     }
 
+    @Override
+    public String toString() {
+        return "Classroom{" +
+                "id=" + id +
+                ", classroomName='" + classroomName + '\'' +
+                ", classroomCapacity=" + classroomCapacity +
+                '}';
+    }
 }

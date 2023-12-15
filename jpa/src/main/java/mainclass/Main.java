@@ -1,34 +1,29 @@
 package mainclass;
 
-import countrydummyclass.Country;
 import jakarta.persistence.*;
 import util.JPAUtil;
 
-import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
 public class Main {
 
+
     public static void main(String[] args) {
-        EntityManager em = JPAUtil.getEntityManager();
 
-        System.out.print("Enter search term: ");
-        Scanner scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
-
-        // Validate user input
-        if (name == null || name.isEmpty()) {
-            System.out.println("Invalid input.");
-            return;
+        boolean isRunning = true;
+        while (isRunning) {
+            Menu.showMain();
+            int menuChoice = UserInputHandler.menuInput(4);
+            switch (menuChoice) {
+                case 0 -> isRunning = false;
+                case 1 -> Menu.create();
+                case 2 -> Menu.read();
+                case 3 -> Menu.update();
+                case 4 -> Menu.delete();
+                default -> System.out.println("Invalid choice.");
+            }
         }
-
-        TypedQuery<Country> query = em.createQuery("SELECT c FROM Country c WHERE c.countryName = :name", Country.class);
-        query.setParameter("name", name);
-        List<Country> countries = query.getResultList();
-        countries.forEach(System.out::println);
-
-        em.close();
     }
 
     static void inTransaction(Consumer<EntityManager> work) {

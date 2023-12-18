@@ -6,25 +6,21 @@ public class UserInputHandler {
     private static Scanner scanner = new Scanner(System.in);
 
     public static int menuInput(int maxChoices) {
-        int choice = -1;
+        int choice = readIntInput();
         while (choice < 0 || choice > maxChoices) {
-            choice = readIntInput();
-            System.out.println("Enter valid number from menu");
+            System.out.println("You have to enter a number between 0 and " + maxChoices);
         }
         return choice;
     }
 
     public static int readIntInput() {
-        int choice = -1;
-        while (choice == -1) {
+        while (true) {
             try {
-                choice = Integer.parseInt(scanner.nextLine());
-                return choice;
+                return Integer.parseInt(scanner.nextLine());
             } catch (Exception e) {
-                System.out.println("Enter a number");
+                System.out.println("You have to enter a number: ");
             }
         }
-        return choice;
     }
 
     public static String readStringInput() {

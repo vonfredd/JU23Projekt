@@ -1,5 +1,6 @@
 package crud;
 
+import classes.Classroom;
 import classes.Course;
 import classes.Student;
 import classes.Teacher;
@@ -16,28 +17,36 @@ public class Create {
     public static void course() {
         System.out.println("Enter new course name: ");
         String name = UserInputHandler.readStringInput();
+        final Course course = new Course();
+        course.setName(name);
 
         System.out.println("Which teacher (ID) would you like to assign?: ");
-        final Course course = new Course();
         Teacher teacher = null;
         while (teacher == null) {
             Read.showTeachers();
             int teacherId = UserInputHandler.readIntInput();
-            course.setName(name);
-            teacher = getTeacherById(teacherId);
+            teacher = em.find(Teacher.class, teacherId);
             if (teacher == null) {
                 System.out.println("Teacher with teacherId " + teacherId + " not found.");
             }
         }
         course.setTeacher(teacher);
+
+        System.out.println("Which classroom (ID) would you like to assign?: ");
+        Classroom classroom = null;
+        while (classroom == null) {
+            Read.showClassrooms();
+            int classroomId = UserInputHandler.readIntInput();
+            classroom = em.find(Classroom.class, classroomId);
+            if (classroom == null) {
+                System.out.println("Classroom with classroomId " + classroomId + " not found.");
+            }
+        }
+
+        course.setClassroom(classroom);
         persistObject(course);
     }
 
-    // ToDo flytta till Teacher // Read klassen?? @Emmelie
-    private static Teacher getTeacherById(int teacherId) {
-        Teacher teacher = em.find(Teacher.class, teacherId);
-        return teacher;
-    }
 
     public static void student() {
         System.out.println("Enter new student first name: ");

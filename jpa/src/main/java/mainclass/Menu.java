@@ -9,7 +9,6 @@ import crud.Update;
 
 import static crud.Read.studentsFromCourse;
 
-
 public class Menu {
 
     static void create() {
@@ -26,20 +25,11 @@ public class Menu {
             int menuChoice = UserInputHandler.menuInput(3);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
-                case 1 -> {
-                    Create.course();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                case 2 -> {
-                    Create.student();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                case 3 -> {
-                    Create.teacher();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                default -> System.out.println("Invalid choice.");
+                case 1 -> Create.course();
+                case 2 -> Create.student();
+                case 3 -> Create.teacher();
             }
+            UserInputHandler.pressEnterToContinue();
         }
     }
 
@@ -50,22 +40,18 @@ public class Menu {
                     Show
                     1. Course
                     2. Statistics
+                    3. ShowStudents
                     0. Back
                     """;
             System.out.println(readMenu);
-            int menuChoice = UserInputHandler.menuInput(2);
+            int menuChoice = UserInputHandler.menuInput(3);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
-                case 1 -> {
-                    Read.showCourse();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                case 2 -> {
-                    readStatistics();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                default -> System.out.println("Invalid choice.");
+                case 1 -> Read.showCourses();
+                case 2 -> readStatistics();
+                case 3 -> Read.showStudents();
             }
+            UserInputHandler.pressEnterToContinue();
         }
     }
 
@@ -83,16 +69,10 @@ public class Menu {
             int menuChoice = UserInputHandler.menuInput(2);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
-                case 1 -> {
-                    Read.grades();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                case 2 -> {
-                    Read.studentsFromCourse();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                default -> System.out.println("Invalid choice.");
+                case 1 -> Read.grades();
+                case 2 -> Read.studentsFromCourse();
             }
+            UserInputHandler.pressEnterToContinue();
         }
     }
 
@@ -106,19 +86,13 @@ public class Menu {
                     0. Back
                     """;
             System.out.println(updateMenu);
-            int menuChoice = UserInputHandler.menuInput(1);
+            int menuChoice = UserInputHandler.menuInput(2);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
-                case 1 -> {
-                    Update.grades();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                case 2 -> {
-                    Update.studentName();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                default -> System.out.println("Invalid choice.");
+                case 1 -> Update.gradesNew();
+                case 2 -> Update.updateStudentName();
             }
+            UserInputHandler.pressEnterToContinue();
         }
     }
 
@@ -136,20 +110,11 @@ public class Menu {
             int menuChoice = UserInputHandler.menuInput(3);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
-                case 1 -> {
-                    Delete.student();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                case 2 -> {
-                    Delete.teacher();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                case 3 -> {
-                    Delete.course();
-                    UserInputHandler.pressEnterToContinue();
-                }
-                default -> System.out.println("Invalid choice.");
+                case 1 -> Delete.student();
+                case 2 -> Delete.teacher();
+                case 3 -> Delete.course();
             }
+            UserInputHandler.pressEnterToContinue();
         }
     }
 

@@ -10,45 +10,61 @@ import mainclass.Main;
 import mainclass.UserInputHandler;
 import util.JPAUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static mainclass.Main.inTransaction;
 
 public class Delete {
-
-    //static EntityManager em = JPAUtil.getEntityManager();
-
-    public static void student() {
+    private static void removeObject(Object o, int id) {
         EntityManager em = JPAUtil.getEntityManager();
+        em.getTransaction().begin();
+        em.remove(em.find(o.getClass(), id));
+        em.getTransaction().commit();
+        em.close();
+    }
 
-        System.out.println("Which student (ID) would you like to remove?: ");
-        Read.showStudents();
-        int studentID = UserInputHandler.readIntInput();
-        Student student = em.find(Student.class, studentID);
+    public static void teacher() {
+        EntityManager em = JPAUtil.getEntityManager();
+        Read.showTeachers();
+        System.out.println("Which teacher (ID) would you like to remove?: ");
+        int teacherId = UserInputHandler.readIntInput();
+        removeObject(em.find(Teacher.class, teacherId),teacherId);
+    }
 
-        int studentId = student.getId();
-        if (student != null) {
-            TypedQuery<StudentCourseGrade> query = em.createQuery("" +
-                    "SELECT scg FROM StudentCourseGrade scg " +
-                    "JOIN scg.student s " +
-                    "WHERE s.id = :studentId", StudentCourseGrade.class);
-            query.setParameter("studentId", studentId);
-            List<StudentCourseGrade> studentGrades = query.getResultList();
-            for (StudentCourseGrade grade : studentGrades) {
-                Main.inTransaction(entityManager -> {
-                    em.remove(grade);
-                });
-            }
-            Main.inTransaction(entityManager -> {
-                em.remove(student);
-            });
-            System.out.println("Student with studentId: " + studentID + " successfully removed.");
-        } else {
-            System.out.println("Teacher with studentId: " + studentID + " not found.");
+    public static void course() {
+        EntityManager em = JPAUtil.getEntityManager();
+        System.out.println("Which course (ID) would you like to remove?: ");
+        Read.showCourses();
+        int courseID = UserInputHandler.readIntInput();
+        removeObject(em.find(Course.class, courseID),courseID);
+        em.close();
+    }
+
+    public static void studentCourseGrade(Student s) {
+        EntityManager em = JPAUtil.getEntityManager();
+        TypedQuery<StudentCourseGrade> query = em.createQuery("" +
+                        "Select scg from StudentCourseGrade scg" +
+                        " where scg.student.id=:id", StudentCourseGrade.class)
+                .setParameter("id", s.getId());
+        List<StudentCourseGrade> list = query.getResultList();
+        for (StudentCourseGrade scg : list) {
+            removeObject(scg, scg.getId());
         }
         em.close();
     }
 
+    public static void student() {
+        EntityManager em = JPAUtil.getEntityManager();
+        System.out.println("Which student (ID) would you like to remove?: ");
+        Read.showStudents();
+        int studentID = UserInputHandler.readIntInput();
+        Student student = em.find(Student.class, studentID);
+        studentCourseGrade(student);
+        removeObject(student,studentID);
+        em.close();
+    }
 
     /* public static void student() {
         System.out.println("Which student (ID) would you like to remove?: ");
@@ -78,26 +94,6 @@ public class Delete {
             e.printStackTrace();
         }
     } */
-
-    public static void teacher() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        System.out.println("Which teacher (ID) would you like to remove?: ");
-        Read.showTeachers();
-        int teacherId = UserInputHandler.readIntInput();
-        Teacher teacher = em.find(Teacher.class, teacherId);
-        if (teacher != null) {
-            em.createQuery("DELETE FROM Course c WHERE c.teacher.id = :teacherId")
-                    .setParameter("teacherId", teacherId)
-                    .executeUpdate();
-            System.out.println("Teacher with teacherId: " + teacherId + " successfully removed.");
-            em.remove(teacher);
-        } else {
-            System.out.println("Teacher with teacherId: " + teacherId + " not found.");
-        }
-        em.close();
-    }
-
     /* public static void teacher() {
         System.out.println("Which teacher (ID) would you like to remove?: ");
         Read.showTeachers();
@@ -128,55 +124,4 @@ public class Delete {
             e.printStackTrace();
         }
     }*/
-
-    public static void course() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        System.out.println("Which course (ID) would you like to remove?: ");
-        Read.showCourses();
-        int courseID = UserInputHandler.readIntInput();
-        Course course = em.find(Course.class, courseID);
-        if (course != null) {
-            System.out.println("Course with courseId: " + courseID + " successfully removed.");
-            em.remove(course);
-        } else {
-            System.out.println("Course with courseId: " + courseID + " not found.");
-        }
-        em.close();
-    }
-
-    /* public static void course() {
-        System.out.println("Which course (ID) would you like to remove?: ");
-        Read.showCourses();
-        int courseId = UserInputHandler.readIntInput();
-
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-
-        try {
-            Course course = em.find(Course.class, courseId);
-            if (course != null) {
-                em.createQuery("DELETE FROM StudentCourseGrade scg WHERE scg.course.id = :courseId")
-                        .setParameter("courseId", courseId)
-                        .executeUpdate();
-                em.remove(course);
-                transaction.commit();
-                System.out.println("Course with courseId: " + courseId + " successfully removed.");
-            } else {
-                System.out.println("Course with courseId: " + courseId + " not found.");
-            }
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-    } */
-
-    public static void removeObject(Object o) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        inTransaction(entityManager -> entityManager.remove(o));
-        em.close();
-    }
 }

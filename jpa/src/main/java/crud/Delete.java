@@ -30,7 +30,21 @@ public class Delete {
         Read.showTeachers();
         System.out.println("Which teacher (ID) would you like to remove?: ");
         int teacherId = UserInputHandler.readIntInput();
-        removeObject(em.find(Teacher.class, teacherId),teacherId);
+        removeTeacherFromCourse(em.find(Teacher.class,teacherId));
+        removeObject(em.find(Teacher.class, teacherId), teacherId);
+    }
+
+    private static void removeTeacherFromCourse(Teacher teacher) {
+        EntityManager em = JPAUtil.getEntityManager();
+        TypedQuery<Course> query = em.createQuery("select c from Course c" +
+                " where c.teacher.id =:id ",Course.class)
+                .setParameter("id",teacher.getId());
+        List<Course> list = query.getResultList();
+        for (Course scg : list) {
+            em.getTransaction().begin();
+            scg.setTeacher(null);
+            em.getTransaction().commit();
+        }
     }
 
     public static void course() {
@@ -38,11 +52,11 @@ public class Delete {
         System.out.println("Which course (ID) would you like to remove?: ");
         Read.showCourses();
         int courseID = UserInputHandler.readIntInput();
-        removeObject(em.find(Course.class, courseID),courseID);
+        removeObject(em.find(Course.class, courseID), courseID);
         em.close();
     }
 
-    public static void studentCourseGrade(Student s) {
+    public static void removeAssociatedCourseAndGrade(Student s) {
         EntityManager em = JPAUtil.getEntityManager();
         TypedQuery<StudentCourseGrade> query = em.createQuery("" +
                         "Select scg from StudentCourseGrade scg" +
@@ -61,8 +75,8 @@ public class Delete {
         Read.showStudents();
         int studentID = UserInputHandler.readIntInput();
         Student student = em.find(Student.class, studentID);
-        studentCourseGrade(student);
-        removeObject(student,studentID);
+        removeAssociatedCourseAndGrade(student);
+        removeObject(student, studentID);
         em.close();
     }
 

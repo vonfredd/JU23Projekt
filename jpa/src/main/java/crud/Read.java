@@ -10,7 +10,7 @@ import util.JPAUtil;
 import java.util.List;
 
 public class Read {
-    static EntityManager em = JPAUtil.getEntityManager();
+    //static EntityManager em = JPAUtil.getEntityManager();
 
     public static void studentsFromCourse() {
         showCourses();
@@ -32,6 +32,7 @@ public class Read {
     }
 
     public static void grades() {
+        EntityManager em = JPAUtil.getEntityManager();
         System.out.println("What name");
         String name = UserInputHandler.readStringInput();
         TypedQuery<Student> query = em.createQuery("SELECT c FROM Student c " +
@@ -43,6 +44,7 @@ public class Read {
     }
 
     public static void showTeachers() {
+        EntityManager em = JPAUtil.getEntityManager();
         TypedQuery<Teacher> query = em.createQuery("SELECT t FROM Teacher t", Teacher.class);
         List<Teacher> teachers = query.getResultList();
         for (Teacher t : teachers) {
@@ -64,6 +66,7 @@ public class Read {
     } */
 
     public static void showStudents() {
+        EntityManager em = JPAUtil.getEntityManager();
         TypedQuery<Student> query = em.createQuery("SELECT s FROM Student s", Student.class);
         List<Student> students = query.getResultList();
         for (Student s : students) {
@@ -71,10 +74,12 @@ public class Read {
                     s.getFirstName() + "\t" +
                     s.getLastName());
         }
+        em.close();
     }
 
 
     public static void showCourses() {
+        EntityManager em = JPAUtil.getEntityManager();
         try {
             TypedQuery<Object[]> query = em.createQuery(
                     "SELECT c, t, cl " +
@@ -108,11 +113,13 @@ public class Read {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        em.close();
     }
 
     
 
     public static void showGrades() {
+        EntityManager em = JPAUtil.getEntityManager();
         TypedQuery<Grade> query = em.createQuery("SELECT g FROM Grade g", Grade.class);
         List<Grade> grades = query.getResultList();
         String headerGradeID = "GID: ";
@@ -122,9 +129,11 @@ public class Read {
         for (Grade g : grades) {
             System.out.printf(format, g.getId(), g.getName() + "\n");
         }
+        em.close();
     }
 
     public static void showStudentCourseGrade() {
+        EntityManager em = JPAUtil.getEntityManager();
         TypedQuery<StudentCourseGrade> query = em.createQuery("SELECT scg " +
                 "FROM StudentCourseGrade scg", StudentCourseGrade.class);
         List<StudentCourseGrade> list = query.getResultList();
@@ -140,9 +149,11 @@ public class Read {
                     scg.getGrade().getName(),
                     scg.getStudent().getFirstName() + "\n");
         }
+        em.close();
     }
 
     public static void showClassrooms(){
+        EntityManager em = JPAUtil.getEntityManager();
         TypedQuery<Classroom> query = em.createQuery("SELECT c FROM Classroom c", Classroom.class);
         List<Classroom> classrooms = query.getResultList();
         if (!classrooms.isEmpty()) {
@@ -152,5 +163,6 @@ public class Read {
                         c.getClassroomCapacity());
             }
         }
+        em.close();
     }
 }

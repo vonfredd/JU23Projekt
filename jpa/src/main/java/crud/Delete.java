@@ -16,9 +16,10 @@ import static mainclass.Main.inTransaction;
 
 public class Delete {
 
-    static EntityManager em = JPAUtil.getEntityManager();
+    //static EntityManager em = JPAUtil.getEntityManager();
 
     public static void student() {
+        EntityManager em = JPAUtil.getEntityManager();
 
         System.out.println("Which student (ID) would you like to remove?: ");
         Read.showStudents();
@@ -36,12 +37,10 @@ public class Delete {
             for (StudentCourseGrade grade : studentGrades) {
                 Main.inTransaction(entityManager -> {
                     em.remove(grade);
-                    em.flush();
                 });
             }
             Main.inTransaction(entityManager -> {
                 em.remove(student);
-                em.flush();
             });
             System.out.println("Student with studentId: " + studentID + " successfully removed.");
         } else {
@@ -49,6 +48,7 @@ public class Delete {
         }
         em.close();
     }
+
 
     /* public static void student() {
         System.out.println("Which student (ID) would you like to remove?: ");
@@ -80,6 +80,8 @@ public class Delete {
     } */
 
     public static void teacher() {
+        EntityManager em = JPAUtil.getEntityManager();
+
         System.out.println("Which teacher (ID) would you like to remove?: ");
         Read.showTeachers();
         int teacherId = UserInputHandler.readIntInput();
@@ -128,6 +130,8 @@ public class Delete {
     }*/
 
     public static void course() {
+        EntityManager em = JPAUtil.getEntityManager();
+
         System.out.println("Which course (ID) would you like to remove?: ");
         Read.showCourses();
         int courseID = UserInputHandler.readIntInput();
@@ -170,6 +174,8 @@ public class Delete {
     } */
 
     public static void removeObject(Object o) {
+        EntityManager em = JPAUtil.getEntityManager();
+
         inTransaction(entityManager -> entityManager.remove(o));
         em.close();
     }

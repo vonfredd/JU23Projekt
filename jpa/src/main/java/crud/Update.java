@@ -18,7 +18,7 @@ import static mainclass.Main.inTransaction;
 
 
 public class Update {
-    static EntityManager em = JPAUtil.getEntityManager();
+    //static EntityManager em = JPAUtil.getEntityManager();
 
    /* public static void studentName() {
         System.out.println("Which student (ID) would you like to change? ");
@@ -47,7 +47,8 @@ public class Update {
 
         EntityManager em = JPAUtil.getEntityManager();
         Student student = em.find(Student.class,studentId);
-        String name = "ooooo";
+        System.out.println("New firstname:");
+        String name = UserInputHandler.readStringInput();
         updatePersonName(student.getId(),name);
         em.close();
     }
@@ -89,7 +90,7 @@ public class Update {
             e.printStackTrace();
         } finally {em1.close();
         }
-        em.close();
+        em1.close();
     }
 
     public static void grades() {

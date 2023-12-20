@@ -47,7 +47,7 @@ public class Menu {
             int menuChoice = UserInputHandler.menuInput(3);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
-                case 1 -> Read.showCourses();
+                case 1 -> Read.howManyAGrades();
                 case 2 -> readStatistics();
                 case 3 -> Read.showStudents();
             }

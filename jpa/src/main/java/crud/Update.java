@@ -54,6 +54,13 @@ public class Update {
         em.close();
     }
 
+    public static void courseTeacher(){
+        EntityManager em = JPAUtil.getEntityManager();
+        System.out.println("Which course (ID) would you like to change?");
+        Read.showCourses();
+        int courseId = UserInputHandler.readIntInput();
+    }
+
      public static void studentName() {
         System.out.println("Which student (ID) would you like to change? ");
         Read.showStudents();

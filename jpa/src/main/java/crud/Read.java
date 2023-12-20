@@ -7,9 +7,8 @@ import jakarta.persistence.TypedQuery;
 import mainclass.UserInputHandler;
 import util.JPAUtil;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class Read {
     //static EntityManager em = JPAUtil.getEntityManager();
@@ -35,7 +34,8 @@ public class Read {
 
     public static void grades() {
         EntityManager em = JPAUtil.getEntityManager();
-        System.out.println("What name");
+        showStudents();
+        System.out.println("Input name to get grades");
         String name = UserInputHandler.readStringInput();
         TypedQuery<Student> query = em.createQuery("SELECT c FROM Student c " +
                 "WHERE c.firstName = :name", Student.class);
@@ -196,6 +196,27 @@ public class Read {
                         "from StudentCourseGrade scg ORDER BY scg.student.firstName asc"
                         ,StudentCourseGrade.class);
        printInfo(query);
+        em.close();
+    }
+
+    public static void howManyAGrades(){
+        EntityManager em = JPAUtil.getEntityManager();
+        TypedQuery<StudentCourseGrade> query =em.createQuery("select scg from StudentCourseGrade scg" +
+                " where scg.grade.id =: id",StudentCourseGrade.class)
+                        .setParameter("id",1);
+        List<StudentCourseGrade> listOfAGrades = query.getResultList();
+        System.out.println("There is a total of "+listOfAGrades.size() +" A-grades");
+
+        Map<String, Integer> totalAGradesPerClass = new HashMap<>();
+
+        listOfAGrades.forEach(scg -> {
+            if ("A".equals(scg.getGrade().getName())) {
+                totalAGradesPerClass.merge(scg.getCourse().getName(), 1, Integer::sum);
+            }
+        });
+        totalAGradesPerClass.forEach((className, totalAGrades) ->
+                System.out.println(className + ", Total A Grades: " + totalAGrades)
+        );
         em.close();
     }
 }

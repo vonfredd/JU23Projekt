@@ -89,7 +89,7 @@ public class Menu {
             int menuChoice = UserInputHandler.menuInput(2);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
-                case 1 -> Update.gradesNew();
+                case 1 -> Update.studentGrades();
                 case 2 -> Update.updateStudentName();
             }
             UserInputHandler.pressEnterToContinue();

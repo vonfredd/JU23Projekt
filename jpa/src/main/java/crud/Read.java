@@ -7,6 +7,8 @@ import jakarta.persistence.TypedQuery;
 import mainclass.UserInputHandler;
 import util.JPAUtil;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Read {
@@ -163,6 +165,37 @@ public class Read {
                         c.getClassroomCapacity());
             }
         }
+        em.close();
+    }
+
+    public static void showStudentGrades(Student s){
+        EntityManager em = JPAUtil.getEntityManager();
+        TypedQuery<StudentCourseGrade> query = em.createQuery("select scg  from StudentCourseGrade scg " +
+                        "where scg.student.id =:id",StudentCourseGrade.class)
+                .setParameter("id",s.getId());
+        printInfo(query);
+        em.close();
+    }
+
+    private static void printInfo(TypedQuery<StudentCourseGrade> query) {
+        List<StudentCourseGrade> list = query.getResultList();
+        String format = "%-20s%-20s%-15s\n";
+        System.out.printf(format,"Name","Course","Grade");
+        System.out.printf(format,"----","------","-----");
+        list.forEach((e)-> System.out.printf(
+                format,
+                e.getStudent().getFirstName()+" "+e.getStudent().getLastName(),
+                e.getCourse().getName(),
+                e.getGrade().getName()
+        ));
+    }
+
+    public static void showAllStudentGrades(){
+        EntityManager em = JPAUtil.getEntityManager();
+        TypedQuery<StudentCourseGrade> query = em.createQuery("select scg  " +
+                        "from StudentCourseGrade scg ORDER BY scg.student.firstName asc"
+                        ,StudentCourseGrade.class);
+       printInfo(query);
         em.close();
     }
 }

@@ -1,5 +1,6 @@
 package crud;
 
+import classes.Course;
 import classes.Grade;
 import classes.Student;
 import classes.StudentCourseGrade;
@@ -130,28 +131,26 @@ public class Update {
         }
     }
 
-    public static void gradesNew(){
-        Read.showStudentCourseGrade();
-        EntityManager ent = JPAUtil.getEntityManager();
-        System.out.println("What ID would you like to change?");
-        int scgId = UserInputHandler.readIntInput();
-
+    public static void studentGrades(){
+        EntityManager em = JPAUtil.getEntityManager();
+        Read.showStudents();
+        System.out.println("What id does the student have?");
+        int studentId = UserInputHandler.readIntInput();
+        Student student = em.find(Student.class,studentId);
+        Read.showStudentGrades(student);
+        System.out.println("What course grade would you like to change?");
+        int courseId = UserInputHandler.readIntInput();
+        Course course = em.find(Course.class,courseId);
         Read.showGrades();
-        EntityManager manager = JPAUtil.getEntityManager();
-
-        System.out.println("What is the new grade?");
+        System.out.println("What should the new grade be?");
         int gradeId = UserInputHandler.readIntInput();
 
-        StudentCourseGrade scg = manager.find(StudentCourseGrade.class, scgId);
-        Grade grade = manager.find(Grade.class,gradeId);
-        System.out.println("This is grade name "+grade.getName());
-
     }
+
 
     private static void updatePersonName(int studentId, String newName) {
         inTransaction(entityManager -> {
             Student person = entityManager.find(Student.class, studentId);
-
             if (person != null) {
                 person.setFirstName(newName);
             } else {

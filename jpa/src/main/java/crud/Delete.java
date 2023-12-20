@@ -19,26 +19,34 @@ import static mainclass.Main.inTransaction;
 public class Delete {
     private static void removeObject(Object o, int id) {
         EntityManager em = JPAUtil.getEntityManager();
-        em.getTransaction().begin();
-        em.remove(em.find(o.getClass(), id));
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.remove(em.find(o.getClass(), id));
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            System.out.println("No changes made.");
+        }
         em.close();
     }
 
     public static void teacher() {
         EntityManager em = JPAUtil.getEntityManager();
         Read.showTeachers();
-        System.out.println("Which teacher (ID) would you like to remove?: ");
+        System.out.println("Which teacher (ID) would you like to remove? ");
         int teacherId = UserInputHandler.readIntInput();
-        removeTeacherFromCourse(em.find(Teacher.class,teacherId));
+        removeTeacherFromCourse(em.find(Teacher.class, teacherId));
         removeObject(em.find(Teacher.class, teacherId), teacherId);
     }
 
     private static void removeTeacherFromCourse(Teacher teacher) {
+        if (teacher == null) {
+            System.out.println("There is no teacher with that id");
+            return;
+        }
         EntityManager em = JPAUtil.getEntityManager();
         TypedQuery<Course> query = em.createQuery("select c from Course c" +
-                " where c.teacher.id =:id ",Course.class)
-                .setParameter("id",teacher.getId());
+                        " where c.teacher.id =:id ", Course.class)
+                .setParameter("id", teacher.getId());
         List<Course> list = query.getResultList();
         for (Course scg : list) {
             em.getTransaction().begin();
@@ -57,6 +65,10 @@ public class Delete {
     }
 
     public static void removeAssociatedCourseAndGrade(Student s) {
+        if (s == null) {
+            System.out.println("There is no student with that id");
+            return;
+        }
         EntityManager em = JPAUtil.getEntityManager();
         TypedQuery<StudentCourseGrade> query = em.createQuery("" +
                         "Select scg from StudentCourseGrade scg" +

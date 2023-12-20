@@ -1,13 +1,19 @@
 package mainclass;
 
 import jakarta.persistence.*;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import util.JPAUtil;
 
 import java.util.function.Consumer;
 
-public class Main {
+public class Main extends Application {
 
     public static void main(String[] args) {
+        launch();
         boolean isRunning = true;
         while (isRunning) {
             Menu.showMain();
@@ -38,5 +44,12 @@ public class Main {
                 throw e;
             }
         }
+    }
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml")); // Change to your FXML file
+        primaryStage.setTitle("JavaFX App");
+        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.show();
     }
 }

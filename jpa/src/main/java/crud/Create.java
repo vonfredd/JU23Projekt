@@ -1,9 +1,6 @@
 package crud;
 
-import classes.Classroom;
-import classes.Course;
-import classes.Student;
-import classes.Teacher;
+import classes.*;
 import jakarta.persistence.EntityManager;
 import mainclass.UserInputHandler;
 import util.JPAUtil;
@@ -68,7 +65,27 @@ public class Create {
         System.out.println("You have successfully added a new student.");
     }
 
-    
+    public static void studentCourseGrade() {
+        EntityManager em = JPAUtil.getEntityManager();
+        Read.showStudents();
+        System.out.println("Which student (ID) do you want to grade?");
+        int studentId = UserInputHandler.readIntInput();
+        Student student = em.find(Student.class, studentId);
+        Read.showCourses();
+        System.out.println("In which course (ID) do you want to grade the student?");
+        int courseId = UserInputHandler.readIntInput();
+        Course course = em.find(Course.class, courseId);
+        Read.showGrades();
+        System.out.println("Which grade (ID) do you want to assign?");
+        int gradeId = UserInputHandler.readIntInput();
+        Grade grade = em.find(Grade.class, gradeId);
+        StudentCourseGrade scg = new StudentCourseGrade();
+        scg.setStudent(student);
+        scg.setCourse(course);
+        scg.setGrade(grade);
+        persistObject(scg);
+        System.out.println("You have successfully added a new student course grade.\n");
+    }
 
     public static void teacher() {
         System.out.println("Enter new teacher first name: ");

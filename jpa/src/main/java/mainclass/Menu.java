@@ -16,15 +16,17 @@ public class Menu {
                     1. New course
                     2. New student
                     3. New teacher
+                    4. New student course grade
                     0. Back
                     """;
             System.out.println(createMenu);
-            int menuChoice = UserInputHandler.menuInput(3);
+            int menuChoice = UserInputHandler.menuInput(4);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
                 case 1 -> Create.course();
                 case 2 -> Create.student();
                 case 3 -> Create.teacher();
+                case 4 -> Create.studentCourseGrade();
             }
             UserInputHandler.pressEnterToContinue(menuChoice);
         }

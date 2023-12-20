@@ -25,7 +25,11 @@ public class UserInputHandler {
     }
 
     public static String readStringInput() {
-        return scanner.nextLine();
+        String input = scanner.nextLine();
+        while (input == null || input.trim().isEmpty()) {
+            System.out.println("Empty input");
+        }
+        return input;
     }
 
     public static void pressEnterToContinue() {

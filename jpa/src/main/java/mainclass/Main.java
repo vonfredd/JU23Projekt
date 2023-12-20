@@ -3,7 +3,6 @@ package mainclass;
 import jakarta.persistence.*;
 import util.JPAUtil;
 
-import java.util.Scanner;
 import java.util.function.Consumer;
 
 public class Main {
@@ -13,14 +12,14 @@ public class Main {
         boolean isRunning = true;
         while (isRunning) {
             Menu.showMain();
-            int menuChoice = UserInputHandler.menuInput(4);
+            int menuChoice = UserInputHandler.menuInput(5);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
                 case 1 -> Menu.create();
                 case 2 -> Menu.read();
-                case 3 -> Menu.update();
-                case 4 -> Menu.delete();
-                default -> System.out.println("Invalid choice.");
+                case 3 -> Menu.count();
+                case 4 -> Menu.update();
+                case 5 -> Menu.delete();
             }
         }
     }

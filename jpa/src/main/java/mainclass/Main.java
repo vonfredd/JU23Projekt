@@ -8,11 +8,10 @@ import java.util.function.Consumer;
 public class Main {
 
     public static void main(String[] args) {
-
         boolean isRunning = true;
         while (isRunning) {
             Menu.showMain();
-            int menuChoice = UserInputHandler.menuInput(5);
+            int menuChoice = UserInputHandler.menuInput(7);
             switch (menuChoice) {
                 case 0 -> isRunning = false;
                 case 1 -> Menu.create();
@@ -20,6 +19,7 @@ public class Main {
                 case 3 -> Menu.count();
                 case 4 -> Menu.update();
                 case 5 -> Menu.delete();
+                case 6 -> Menu.testMenu();
             }
         }
     }

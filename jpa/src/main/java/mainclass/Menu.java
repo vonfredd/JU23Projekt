@@ -26,7 +26,7 @@ public class Menu {
                 case 2 -> Create.student();
                 case 3 -> Create.teacher();
             }
-            UserInputHandler.pressEnterToContinue();
+            UserInputHandler.pressEnterToContinue(menuChoice);
         }
     }
 
@@ -49,7 +49,7 @@ public class Menu {
                 case 2 -> Read.showStudentCourseGradesByCourseId();
                 case 3 -> Read.totalAmountOfStudents();
             }
-            UserInputHandler.pressEnterToContinue();
+            UserInputHandler.pressEnterToContinue(menuChoice);
         }
     }
 
@@ -71,7 +71,7 @@ public class Menu {
                 case 1 -> Read.printGradeCountsByCourseId();
                 case 2 -> Read.printStudentsCountByCourseId();
             }
-            UserInputHandler.pressEnterToContinue();
+            UserInputHandler.pressEnterToContinue(menuChoice);
         }
     }
 
@@ -94,7 +94,7 @@ public class Menu {
                 case 2 -> Update.studentName();
                 case 3 -> Update.courseTeacher();
             }
-            UserInputHandler.pressEnterToContinue();
+            UserInputHandler.pressEnterToContinue(menuChoice);
         }
     }
 
@@ -117,7 +117,7 @@ public class Menu {
                 case 2 -> Delete.teacher();
                 case 3 -> Delete.course();
             }
-            UserInputHandler.pressEnterToContinue();
+            UserInputHandler.pressEnterToContinue(menuChoice);
         }
     }
 
@@ -130,8 +130,23 @@ public class Menu {
                     3. Show statistics
                     4. Update existing data
                     5. Remove
+                    6. Test
                     0. Quit
                     """;
         System.out.println(mainMenu);
+    }
+
+    public static void testMenu(){
+        String menu ="""
+                Testmeny
+                ---------
+                1. Testa
+                """;
+        System.out.println(menu);
+        int menuChoice = UserInputHandler.menuInput(3);
+
+        switch (menuChoice){
+            case 1 -> Read.showAllStudentGrades();
+        }
     }
 }

@@ -32,7 +32,8 @@ public class UserInputHandler {
         return input;
     }
 
-    public static void pressEnterToContinue() {
+    public static void pressEnterToContinue(int menuChoice) {
+        if (menuChoice < 1) return;
         System.out.print("\nPress Enter to Continue...\n");
         scanner.nextLine();
     }

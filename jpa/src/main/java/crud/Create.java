@@ -68,6 +68,8 @@ public class Create {
         System.out.println("You have successfully added a new student.");
     }
 
+    
+
     public static void teacher() {
         System.out.println("Enter new teacher first name: ");
         String firstName = UserInputHandler.readStringInput();

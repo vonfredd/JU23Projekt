@@ -11,24 +11,6 @@ import java.util.*;
 
 public class Read {
 
-    public static void studentsFromCourse() {
-        showCourses();
-        EntityManager em = JPAUtil.getEntityManager();
-        System.out.println("Which course (ID) do you want to show?");
-        int courseId = UserInputHandler.readIntInput();
-        TypedQuery<StudentCourseGrade> query = em.createQuery(
-                "SELECT scg FROM StudentCourseGrade scg " +
-                "JOIN scg.course c " +
-                "JOIN scg.student s " +
-                "WHERE c.id = :courseId", StudentCourseGrade.class);
-        query.setParameter("courseId", courseId);
-        List<StudentCourseGrade> studentGrades = query.getResultList();
-        for (StudentCourseGrade scg : studentGrades) {
-            System.out.printf("%n%10d, %20s, %10s%n", scg.getId(), scg.getCourse(), scg.getGrade());
-
-        }
-        em.close();
-    }
 
     public static void showStudentCourseGrade() {
         EntityManager em = JPAUtil.getEntityManager();
@@ -100,31 +82,26 @@ public class Read {
     }
 
     public static void showStudentCourseGradesByCourseId() {
-        try {
-            EntityManager em = JPAUtil.getEntityManager();
-            System.out.println("Available Courses:");
-            showCourses();
-            System.out.println("Enter the ID of the course to show grades for:");
-            int courseId = UserInputHandler.readIntInput();
-            TypedQuery<StudentCourseGrade> query = em.createQuery(
-                    "SELECT scg FROM StudentCourseGrade scg WHERE scg.course.id = :courseId", StudentCourseGrade.class);
-            query.setParameter("courseId", courseId);
-            List<StudentCourseGrade> studentGrades = query.getResultList();
-            
-            String format = "%-20s%-20s%n";
-            System.out.printf(format,"Student name:","Grade:");
-            System.out.printf(format,"------------","-----");
-            for (StudentCourseGrade scg: studentGrades) {
-                if (!studentGrades.isEmpty()) {
-                    Student s = scg.getStudent();
-                    System.out.printf(format, s.getFirstName()+ " " + s.getLastName(), scg.getGrade().getName());
-                } else {
-                    System.out.println("No student grades found for the specified course.");
-                }
+        EntityManager em = JPAUtil.getEntityManager();
+        System.out.println("Available Courses:");
+        showCourses();
+        System.out.println("Enter the ID of the course to show grades for:");
+        int courseId = UserInputHandler.readIntInput();
+        TypedQuery<StudentCourseGrade> query = em.createQuery(
+                "SELECT scg FROM StudentCourseGrade scg WHERE scg.course.id = :courseId", StudentCourseGrade.class);
+        query.setParameter("courseId", courseId);
+        List<StudentCourseGrade> studentGrades = query.getResultList();
+
+        String format = "%-20s%-20s%n";
+        System.out.printf(format,"Student name:","Grade:");
+        System.out.printf(format,"------------","-----");
+        for (StudentCourseGrade scg: studentGrades) {
+            if (!studentGrades.isEmpty()) {
+                Student s = scg.getStudent();
+                System.out.printf(format, s.getFirstName()+ " " + s.getLastName(), scg.getGrade().getName());
+            } else {
+                System.out.println("No student grades found for the specified course.");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("An error occurred while fetching student grades. Please try again.");
         }
     }
 
@@ -133,23 +110,21 @@ public class Read {
         System.out.println("Available Courses:");
         showCourses();
         System.out.println("Enter the ID of the course to count grades for:");
+        int courseId = UserInputHandler.readIntInput();
 
-        try {
-            int courseId = UserInputHandler.readIntInput();
+        TypedQuery<Object[]> query = em.createQuery(
+                "SELECT scg.grade, COUNT(scg) " +
+                        "FROM StudentCourseGrade scg " +
+                        "WHERE scg.course.id = :courseId " +
+                        "GROUP BY scg.grade.id " +
+                        "ORDER BY scg.grade.id", Object[].class);
 
-            TypedQuery<Object[]> query = em.createQuery(
-                    "SELECT scg.grade, COUNT(scg) " +
-                            "FROM StudentCourseGrade scg " +
-                            "WHERE scg.course.id = :courseId " +
-                            "GROUP BY scg.grade.id " +
-                            "ORDER BY scg.grade.id", Object[].class);
-
-            query.setParameter("courseId", courseId);
-
-            List<Object[]> results = query.getResultList();
+        query.setParameter("courseId", courseId);
+        List<Object[]> results = query.getResultList();
+        if (!results.isEmpty()) {
             String format = "%-20s%-20s%n";
-            System.out.printf(format,"Grade:","Count:");
-            System.out.printf(format,"----","-----");
+            System.out.printf(format, "Grade:", "Count:");
+            System.out.printf(format, "----", "-----");
             for (Object[] result : results) {
                 Grade grade = (Grade) result[0];
                 Long gradeCount = (Long) result[1];
@@ -158,8 +133,8 @@ public class Read {
                     System.out.printf("%-20s%-20s%n", grade.getName(), gradeCount);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            System.out.println("No grades to show.");
         }
     }
 
@@ -168,25 +143,16 @@ public class Read {
         System.out.println("Available Courses:");
         showCourses();
         System.out.println("Enter the ID of the course to count students for:");
+        int courseId = UserInputHandler.readIntInput();
 
-        try {
-            int courseId = UserInputHandler.readIntInput();
+        TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(scg.student.id) " +
+                        "FROM StudentCourseGrade scg " +
+                        "WHERE scg.course.id = :courseId", Long.class);
 
-            TypedQuery<Long> query = em.createQuery(
-                    "SELECT COUNT(scg.student.id) " +
-                            "FROM StudentCourseGrade scg " +
-                            "WHERE scg.course.id = :courseId", Long.class);
-
-            query.setParameter("courseId", courseId);
-
-            Long studentCount = query.getSingleResult();
-
-            System.out.println("Number of students in this course: " + studentCount);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+        query.setParameter("courseId", courseId);
+        Long studentCount = query.getSingleResult();
+        System.out.println("Number of students in this course: " + studentCount);
     }
 
     public static void showTeachers () {
@@ -215,38 +181,34 @@ public class Read {
 
     public static void showCourses() {
         EntityManager em = JPAUtil.getEntityManager();
-        try {
-            TypedQuery<Object[]> query = em.createQuery(
-                    "SELECT c, t, cl " +
-                            "FROM Course c " +
-                            "LEFT JOIN c.teacher t " +
-                            "LEFT JOIN c.classroom cl", Object[].class);
+        TypedQuery<Object[]> query = em.createQuery(
+                "SELECT c, t, cl " +
+                        "FROM Course c " +
+                        "LEFT JOIN c.teacher t " +
+                        "LEFT JOIN c.classroom cl", Object[].class);
 
-            List<Object[]> resultList = query.getResultList();
-            String format = "%-10s%-20s%-30s%s%n";
-            System.out.printf(format,"ID:","Course:","Teacher:","Classroom:");
-            System.out.printf(format,"--","------","---------","----------");
+        List<Object[]> resultList = query.getResultList();
+        String format = "%-10s%-20s%-30s%s%n";
+        System.out.printf(format,"ID:","Course:","Teacher:","Classroom:");
+        System.out.printf(format,"--","------","---------","----------");
 
-            for (Object[] result : resultList) {
-                Course course = (Course) result[0];
-                Teacher teacher = (Teacher) result[1];
-                Classroom classroom = (Classroom) result[2];
-                if (course != null) {
-                    System.out.printf("%-10d%-20s", course.getId(), course.getName());
-                }
-                if (teacher != null) {
-                    System.out.printf("%-30s", teacher.getFirstName() + " " + teacher.getLastName());
-                } else {
-                    System.out.printf("%-30s","N/A");
-                }
-                if (classroom != null) {
-                    System.out.printf("%s%n", classroom.getClassroomName());
-                } else {
-                    System.out.printf("%s%n","N/A");
-                }
+        for (Object[] result : resultList) {
+            Course course = (Course) result[0];
+            Teacher teacher = (Teacher) result[1];
+            Classroom classroom = (Classroom) result[2];
+            if (course != null) {
+                System.out.printf("%-10d%-20s", course.getId(), course.getName());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (teacher != null) {
+                System.out.printf("%-30s", teacher.getFirstName() + " " + teacher.getLastName());
+            } else {
+                System.out.printf("%-30s","N/A");
+            }
+            if (classroom != null) {
+                System.out.printf("%s%n", classroom.getClassroomName());
+            } else {
+                System.out.printf("%s%n","N/A");
+            }
         }
     }
 
@@ -278,8 +240,7 @@ public class Read {
 
     public static void totalAmountOfStudents() {
         EntityManager em = JPAUtil.getEntityManager();
-        TypedQuery<Student> query = em.createQuery("select count(*) from Student ", Student.class);
-        List<Student> list = query.getResultList();
+        TypedQuery<Student> query = em.createQuery("SELECT COUNT(*) FROM Student ", Student.class);
         System.out.println("There is a total of " + query.getResultList().getFirst() + " students in the school.");
         em.close();
     }

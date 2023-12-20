@@ -12,6 +12,8 @@ import static mainclass.Main.inTransaction;
 
 public class Update {
 
+    //StudentId + courseId endast 1 gång! Unikt index
+
     public static void studentName() {
         Read.showStudents();
         System.out.println("Which student (ID) would you like to change? ");
@@ -56,9 +58,7 @@ public class Update {
         System.out.println("Which teacher (ID) would you like to add? For no teacher, enter 0:");
         int teacherId = UserInputHandler.readIntInput();
 
-
         updateTeacherCourse(teacherId, courseId);
-
     }
 
     public static void grades() {

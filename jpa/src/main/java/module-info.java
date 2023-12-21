@@ -3,6 +3,7 @@ module jpa{
     exports crud;
     exports classes;
     exports util;
+
     requires org.hibernate.orm.core;
     requires javafx.controls;
     requires javafx.fxml;

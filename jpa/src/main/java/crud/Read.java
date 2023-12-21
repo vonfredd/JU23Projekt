@@ -246,49 +246,4 @@ public class Read {
     }
 
 
-    //For javaFX
-    public static List<String> showCoursesFX() {
-        EntityManager em = JPAUtil.getEntityManager();
-        TypedQuery<Object[]> query = em.createQuery(
-                "SELECT c, t, cl " +
-                        "FROM Course c " +
-                        "LEFT JOIN c.teacher t " +
-                        "LEFT JOIN c.classroom cl", Object[].class);
-
-        List<Object[]> resultList = query.getResultList();
-        String format = "%-10s%-20s%-30s%s%n";
-        System.out.printf(format, "ID:", "Course:", "Teacher:", "Classroom:");
-        System.out.printf(format, "--", "------", "---------", "----------");
-
-        List<String> returnToFX = new ArrayList<>();
-
-        for (Object[] result : resultList) {
-            Course course = (Course) result[0];
-            Teacher teacher = (Teacher) result[1];
-            Classroom classroom = (Classroom) result[2];
-            if (course != null) {
-                System.out.printf("%-10d%-20s", course.getId(), course.getName());
-            }
-            if (teacher != null) {
-                System.out.printf("%-30s", teacher.getFirstName() + " " + teacher.getLastName());
-            } else {
-                System.out.printf("%-30s", "N/A");
-            }
-            if (classroom != null) {
-                System.out.printf("%s%n", classroom.getClassroomName());
-            } else {
-                System.out.printf("%s%n", "N/A");
-            }
-
-            if (teacher != null && classroom != null) {
-               String s = String.format("%-5s%-20s%-30s%s", String.valueOf(course.getId()),
-                        course.getName(),
-                        teacher.getFirstName(),
-                        classroom.getClassroomName());
-                returnToFX.add(s);
-            }
-        }
-
-        return returnToFX;
-    }
 }

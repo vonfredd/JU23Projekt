@@ -168,16 +168,4 @@ public class Menu {
 
 
 
-    //java fx
-    public static String readTwo(){
-        String readMenu = """
-                    Show
-                    -------------------
-                    1. All courses
-                    2. Student grades for a course
-                    3. Show total amount of students
-                    0. Back
-                    """;
-        return readMenu;
-    }
 }
